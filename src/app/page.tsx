@@ -16,8 +16,10 @@ function DrugResult({ result }: { result: any }): React.ReactElement {
       </p>
       <div>
         <strong>Active ingredients</strong>
-        {result.active_ingredients.map((ingredient: any) => (
-          <p>{ingredient.name}</p>
+        {result.active_ingredients.map((ingredient: any, index: number) => (
+          <p key={`${result.product_ndc}-ingredient-${index}`}>
+            {ingredient.name}
+          </p>
         ))}
       </div>
     </div>
