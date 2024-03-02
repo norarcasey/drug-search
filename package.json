@@ -9,7 +9,7 @@
     "start": "next start",
     "lint": "next lint",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build -t true"
+    "deploy": "gh-pages -d out -t true"
   },
   "dependencies": {
     "awesome-debounce-promise": "^2.1.0",
