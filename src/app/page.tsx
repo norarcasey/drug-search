@@ -1,9 +1,7 @@
 "use client";
 
-import { useState } from "react";
-
 import { data } from "./data";
-// import styles from "./page.module.css";
+import { useDebouncedSearch } from "./hooks/useDebounceSearch";
 
 function DrugResult({ result }: { result: any }): React.ReactElement {
   return (
@@ -12,11 +10,14 @@ function DrugResult({ result }: { result: any }): React.ReactElement {
         <strong>{result.generic_name}</strong>
       </p>
       <p>
+        <strong>NDC:</strong> {result.product_ndc}
+      </p>
+      <p>
         <strong>Brand name:</strong> {result.brand_name}
       </p>
       <div>
         <strong>Active ingredients</strong>
-        {result.active_ingredients.map((ingredient: any, index: number) => (
+        {result?.active_ingredients?.map((ingredient: any, index: number) => (
           <p key={`${result.product_ndc}-ingredient-${index}`}>
             {ingredient.name}
           </p>
@@ -26,28 +27,39 @@ function DrugResult({ result }: { result: any }): React.ReactElement {
   );
 }
 
+const useSerarchDrugs = () =>
+  useDebouncedSearch(async (search: string) => {
+    const response = await fetch(
+      `https://api.fda.gov/drug/ndc.json?search=brand_name:${search}*&limit=10`
+    );
+
+    return response.json();
+  });
+
 export default function Home() {
-  const [search, setSearch] = useState("");
-  const { results } = data;
+  const { inputText, setInputText, searchResults } = useSerarchDrugs();
+  console.log(searchResults.result, "searchResults");
 
   return (
-    <div className="flex flex-col p-20 gap-5">
-      <h1 className="text-3xl pb-10">Drug Search</h1>
-      <div className="text-sm text-gray-500">{data.meta.disclaimer}</div>
+    <div className="flex flex-col p-10 m-10 gap-5 min-w-450 border">
+      <h1 className="text-3xl">Drug Search</h1>
+      <hr />
       <input
         type="text"
         className="text-lg border mb-10 p-2 w-1/2"
-        placeholder="Search"
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
+        placeholder="Search (brand name)"
+        value={inputText}
+        onChange={(e) => setInputText(e.target.value)}
       />
-
+      <div className="text-sm text-gray-500">{data.meta.disclaimer}</div>
       <div className="flex flex-wrap flex-auto gap-2">
-        {results.map((result, index) => (
+        {searchResults.loading && <div>...</div>}
+        {searchResults.error && <div>Error: {searchResults.error.message}</div>}
+
+        {searchResults?.result?.results?.map((result: any, index: number) => (
           <DrugResult key={`drug-result-${index}`} result={result} />
         ))}
       </div>
-      {/* TODO: Add a search box */}
     </div>
   );
 }
