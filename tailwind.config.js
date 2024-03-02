@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  basePath: "/drug-search",
   important: true,
   content: [
     "./pages/**/*.{js,ts,jsx,tsx}",
