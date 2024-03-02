@@ -1,5 +1,7 @@
 "use client";
 
+import "./globals.css";
+
 import { data } from "./data";
 import { useDebouncedSearch } from "./hooks/useDebounceSearch";
 
