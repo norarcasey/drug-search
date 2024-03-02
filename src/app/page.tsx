@@ -38,7 +38,6 @@ const useSerarchDrugs = () =>
 
 export default function Home() {
   const { inputText, setInputText, searchResults } = useSerarchDrugs();
-  console.log(searchResults.result, "searchResults");
 
   return (
     <div className="flex flex-col p-10 m-10 gap-5 min-w-450 border">
@@ -46,14 +45,14 @@ export default function Home() {
       <hr />
       <input
         type="text"
-        className="text-lg border mb-10 p-2 w-1/2"
+        className="text-lg border p-2 w-1/2 mt-5"
         placeholder="Search (brand name)"
         value={inputText}
         onChange={(e) => setInputText(e.target.value)}
       />
-      <div className="text-sm text-gray-500">{data.meta.disclaimer}</div>
+      <div className="text-sm text-gray-500 mb-10">{data.meta.disclaimer}</div>
       <div className="flex flex-wrap flex-auto gap-2">
-        {searchResults.loading && <div>...</div>}
+        {searchResults.loading && <div>loading...</div>}
         {searchResults.error && <div>Error: {searchResults.error.message}</div>}
 
         {searchResults?.result?.results?.map((result: any, index: number) => (
